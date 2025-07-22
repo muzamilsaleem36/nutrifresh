@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="NutriFresh - Analyze food freshness with AI">
+  
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="NutriFresh">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>NutriFresh</title>
+  <link rel="manifest" href="manifest.json">
+
+  <script>
+    // The value below is injected by flutter build, do not touch.
+    var serviceWorkerVersion = null;
+  </script>
+  <!-- This script adds the flutter initialization JS code -->
+  <script src="flutter.js" defer></script>
+</head>
+<body>
+  <div id="loading" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 18px; font-family: Arial, sans-serif; color: #4B9460;">
+    <div>Loading NutriFresh application...</div>
+    <div id="loadingStatus" style="font-size: 12px; margin-top: 8px; color: #666;"></div>
+  </div>
+
+  <script>
+    window.addEventListener('load', function(ev) {
+      // Download main.dart.js
+      _flutter = window._flutter || {};
+      _flutter.loader = _flutter.loader || {};
+      
+      var scriptLoaded = false;
+      function handleFlutterInit() {
+        if (scriptLoaded) return;
+        scriptLoaded = true;
+        
+        var loading = document.getElementById('loading');
+        var loadingStatus = document.getElementById('loadingStatus');
+        
+        try {
+          loadingStatus.textContent = "Starting Flutter initialization";
+          
+          window.flutterConfiguration = {
+            canvasKitBaseUrl: "/canvaskit/",
+          };
+          
+          // Initialize Flutter
+          _flutter.loader.loadEntrypoint({
+            serviceWorker: {
+              serviceWorkerVersion: serviceWorkerVersion,
+            },
+            onEntrypointLoaded: async function(engineInitializer) {
+              loadingStatus.textContent = "Entrypoint loaded, initializing engine";
+              try {
+                const appRunner = await engineInitializer.initializeEngine();
+                loadingStatus.textContent = "Engine initialized, running app";
+                await appRunner.runApp();
+                loading.remove();
+              } catch (error) {
+                loadingStatus.textContent = "Error initializing Flutter app: " + error.toString();
+                console.error("Flutter initialization error:", error);
+              }
+            }
+          });
+        } catch (error) {
+          loadingStatus.textContent = "Critical error during setup: " + error.toString();
+          console.error("Critical Flutter setup error:", error);
+        }
+      }
+      
+      setTimeout(function() {
+        handleFlutterInit();
+      }, 100);
+    });
+  </script>
+</body>
+</html>
